@@ -1,5 +1,5 @@
 # draw2scene
-working on algorithms to support estimation &amp; rendering of handrawn shapes to 3D interpretations
+working on algorithms to support estimation &amp; rendering of hand-drawn shapes to 3D interpretations
 
 
 
