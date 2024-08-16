@@ -18,11 +18,9 @@ def directory_crawler(sample_directory):
         match = re.search(pattern=pattern, string=file_str)
         yield filepath, str(f"{match.group(1)}_{match.group(2)}")
 
-    # Change to the parent of the parent directory
-    os.chdir(os.path.join(os.path.pardir, os.path.pardir))
-
     # Specify the root directory to start the walk
     root_directory = str(f"data/{sample_directory}")
+    print(root_directory)
 
     # Walk through the directory tree
     for dirpath, dirnames, filenames in os.walk(root_directory):
@@ -59,14 +57,18 @@ def setup_directory_writer(output_dir):
 # makes a directory.csv file and a nested directory
 # the subdirectory mask_data contains all .txt files with saved arrays
 def mask_pipeline_controller(sample_directory, output_directory):
+    # Change to the parent of the parent directory
+    os.chdir(os.path.join(os.path.pardir, os.path.pardir))
+
     # make subdirectory to hold outputted masks
     os.mkdir(str(f"{output_directory}/mask_data"))
 
     # make csv directories
     pipeline_writer = setup_directory_writer(output_directory)
 
+    crawler = directory_crawler(sample_directory)
     # crawl sample directory, generate masks for one sample at a time
-    for filename, mask_file_prefix in directory_crawler(sample_directory):
+    for filename, mask_file_prefix in crawler:
         # Instantiate surface separation pipeline for this mask
         sample_mask_generator = mask_controller(filename)
 
@@ -86,6 +88,4 @@ def mask_pipeline_controller(sample_directory, output_directory):
             )
 
             mask_index += 1
-
-
 
