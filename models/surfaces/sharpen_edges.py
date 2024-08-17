@@ -25,7 +25,11 @@ def sharpen_mask(mask_arr):
     return chull
 
 
-def apply_sharpen_save(directory_file, save_directory, display=False):
+def apply_sharpen_save(directory_file, save_directory, label_directory, display=False):
+    # ensure label file exists
+    if not os.path.exists(label_directory):
+        raise FileNotFoundError("Labeling of surfaces must exist")
+
     # Change to the parent of the parent directory
     os.chdir(os.path.join(os.path.pardir, os.path.pardir))
 
@@ -36,10 +40,18 @@ def apply_sharpen_save(directory_file, save_directory, display=False):
     df = df[df["shape"] != "polygon"]
     df = df[df["shape"] != "circle"]
 
-    image_files = df["original_file"]
-    mask_files = df["mask_filepath"]
+    # create exclusion list for masks of improper type
+    label_df = pd.read_csv(label_directory)
+    label_df = label_df[label_df["label"] != "single surface"]  # valid, so do not exclude
+    label_df = label_df[label_df["label"] != "multiple surfaces"]  # valid, so do not exclude
+    excluded_masks = list(label_df["mask_filepath"])
 
-    for mask in mask_files:
+    # apply filter
+    filter_values = [x in excluded_masks for x in list(df["mask_filepath"])]
+    df["filter"] = filter_values
+    df = df[df["filter"] != True]
+
+    for mask in list(df["mask_filepath"]):
         # load mask
         arr = np.loadtxt(mask)
         try:
@@ -53,5 +65,3 @@ def apply_sharpen_save(directory_file, save_directory, display=False):
             # IndexError: list index out of range
             # poly_clipped = poly.clip_to_bbox(clip_rect).to_polygons()[0]
             print(f"Error, sample {mask} failed")
-
-
