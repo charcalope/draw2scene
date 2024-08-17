@@ -6,6 +6,7 @@ import os
 import csv
 from utils.terminal_utils import up_down_selection
 
+
 def setup_label_writer(output_dir):
     def label_writer(directory_path):
         while True:
@@ -27,6 +28,7 @@ def setup_label_writer(output_dir):
     writer_generator = label_writer(output_dir)
     writer_generator.__next__()
     return writer_generator
+
 
 def display_each_mask(directory_file, label_destination):
     # Change to the parent of the parent directory
@@ -51,6 +53,11 @@ def display_each_mask(directory_file, label_destination):
         if mask not in labeled_masks:
             # load mask and image
             arr = np.loadtxt(mask)
+
+            # resize and overwrite
+            resized_array = skimage.transform.resize(arr, (128, 128))
+            np.savetxt(mask, resized_array)
+
             img = skimage.io.imread(image)
 
             # display to user
