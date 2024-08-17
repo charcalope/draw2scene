@@ -5,7 +5,7 @@ import pandas as pd
 import os
 import csv
 from utils.terminal_utils import up_down_selection
-
+from utils.file_utils import which_shape
 
 def setup_label_writer(output_dir):
     def label_writer(directory_path):
@@ -15,20 +15,19 @@ def setup_label_writer(output_dir):
 
             # write
             with open(directory_path, 'a', newline='') as directory_file:
-                dir_fieldnames = ['mask_filepath', 'label']
+                dir_fieldnames = ['mask_filepath', 'label', 'shape']
                 dir_writer = csv.DictWriter(directory_file, fieldnames=dir_fieldnames)
                 dir_writer.writerow(row_data)
 
     if not os.path.exists(output_dir):
         with open(output_dir, 'w', newline='') as csvfile:
-            fieldnames = ['mask_filepath', 'label']
+            fieldnames = ['mask_filepath', 'label', 'shape']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
 
     writer_generator = label_writer(output_dir)
     writer_generator.__next__()
     return writer_generator
-
 
 def display_each_mask(directory_file, label_destination):
     # Change to the parent of the parent directory
@@ -76,7 +75,8 @@ def display_each_mask(directory_file, label_destination):
 
             label_writer.send({
                 "mask_filepath": mask,
-                "label": user_label
+                "label": user_label,
+                "shape": which_shape(mask)
             })
         else:
             print("skipping mask labeled in prior session...")
