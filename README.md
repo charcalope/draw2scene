@@ -11,12 +11,12 @@ There are two datasets of handrawn shapes, processed from raw scans, and ready f
 | data/sample_drawn_shapes | small # of samples, unsorted, mostly cubes |
 | data/sample_set_2 | larger dataset of samples (~150) sorted by shape of primary face: square, circle, triangle, polygon |
 
-Under dataset_prep, there is code for preparing raw image scans for 
+Under dataset_prep, there is code for preparing raw image scans into a standard format.
 
 ### Working on
 **Surface Separation**
 
-<img src="https://github.com/user-attachments/assets/b3ae03f8-e4aa-4fbc-a3fa-3abade828334" width="250" height="250">
+<img width="450" alt="handrawn_comparison" src="https://github.com/user-attachments/assets/5a2b5af6-5fa5-4341-b0a6-3ea5415828b5">
 
 
 **Up Next**
